@@ -314,7 +314,36 @@ public:
 
     return max_sum;
   }
+  /*
+  78. 子集
+  输入：nums = [1,2,3]
+  输出：[[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
+  */ 
+  void subset_trackback(vector<int> &nums, int len, int start, int first, vector<vector<int>> &res)
+  {
+    if (first == len)
+    {
+      vector<int> tmp(nums.begin(), nums.begin() + len);
+      res.push_back(tmp);
+    }
 
+    for (int i = start; i < nums.size(); i++)
+    {
+      swap(nums[first], nums[i]);
+      subset_trackback(nums, len, i + 1, first + 1, res);
+      swap(nums[first], nums[i]);
+    }
+  }
+  vector<vector<int>> subsets(vector<int> &nums)
+  {
+    vector<vector<int>> res;
+    int n = nums.size();
+    for (int l = 0; l <= n; l++)
+    {
+      subset_trackback(nums, l, 0, 0, res);
+    }
+    return res;
+  }
   /*
   102. 二叉树的层序遍历
   输入：root = [3,9,20,null,null,15,7]
