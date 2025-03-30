@@ -143,6 +143,62 @@ public:
   }
 
   /*
+  46. 全排列
+  输入：nums = [1,2,3]
+  输出：[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
+  思路：回溯+递归
+  method1: 在原来的数组 nums 上进行更改，用一个标志位first来表示当前需要改第几个元素，
+           然后遍历first之后的数组，将第i个数和first进行交换
+  method2: 每一次递归选一个元素，需要维护一个set来看元素有没有被访问过
+  */
+  void backTrack1(vector<int> &nums, int first, int len, vector<vector<int>> &res)
+  {
+    if (first == len)
+    {
+      res.push_back(nums);
+    }
+    for (int i = first; i < len; i++)
+    {
+      swap(nums[first], nums[i]);
+      backTrack1(nums, first + 1, len, res);
+      swap(nums[first], nums[i]);
+    }
+  }
+  void backTrack2(const vector<int> &nums, vector<int> curr, vector<vector<int>> &res, unordered_set<int> &is_pass)
+  {
+    if (is_pass.size() == nums.size())
+    {
+      res.push_back(curr);
+      return;
+    }
+    for (auto num : nums)
+    {
+      if (is_pass.count(num) == 1)
+      {
+        continue;
+      }
+      curr.push_back(num);
+      is_pass.insert(num);
+      backTrack2(nums, curr, res, is_pass);
+      curr.pop_back();
+      is_pass.erase(num);
+    }
+  }
+
+  vector<vector<int>> permute(vector<int> &nums)
+  {
+    vector<vector<int>> res;
+    // method 1
+    backTrack1(nums, 0, nums.size(), res);
+
+    // method 2
+    // vector<int> curr;
+    // unordered_set<int> is_pass;
+    // backTrack2(nums, curr, res, is_pass);
+    return res;
+  }
+
+  /*
   49. 字母异位词分组
   输入：['tea', 'tae', 'hello', 'lolhe']
   期望输出：[['tea', 'tae'], ['hello', 'lolhe']]
