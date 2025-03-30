@@ -387,6 +387,26 @@ public:
   }
 
   /*
+  152. 乘积最大子数组
+  输入: nums = [2,3,-2,4]
+  输出: 6
+  解释: 子数组 [2,3] 有最大乘积 6。
+  思路：弄两个dp，一个维护乘积最大，一个维护乘积最小，要考虑0的影响
+  */
+  int maxProduct(vector<int> &nums)
+  {
+    int n = nums.size();
+    vector<int> max_dp(n), min_dp(n);
+    max_dp[0] = min_dp[0] = nums[0];
+    for (int i = 1; i < n; i++)
+    {
+      max_dp[i] = max(max(max_dp[i - 1] * nums[i], min_dp[i - 1] * nums[i]), nums[i]);
+      min_dp[i] = min(min(max_dp[i - 1] * nums[i], min_dp[i - 1] * nums[i]), nums[i]);
+    }
+    return *max_element(max_dp.begin(), max_dp.end());
+  }
+
+  /*
   198. 打家劫舍
   输入：[1,2,3,1]
   输出：4
@@ -483,7 +503,7 @@ public:
     }
     return *max_element(dp.begin(), dp.end());
   }
-  
+
   /*
   322. 零钱兑换
   输入：coins = [1, 2, 5], amount = 11
