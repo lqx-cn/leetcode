@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <queue>
-
+#include <limits.h>
 using namespace std;
 /**
  * Definition for a binary tree node.
@@ -22,102 +22,6 @@ struct TreeNode
 class Solution
 {
 public:
-  /*
-  53. 最大子数组和
-  输入：nums = [-2,1,-3,4,-1,2,1,-5,4]
-  输出：6
-  解释：连续子数组 [4,-1,2,1] 的和最大，为 6 。
-  */
-  int maxSubArray(vector<int> &nums)
-  {
-    int n = nums.size();
-    if (n == 0)
-    {
-      return 0;
-    }
-    int max_sum = INT_MIN;
-    vector<int> dp(n + 1);
-    dp[0] = INT_MIN;
-    dp[1] = nums[0];
-    for (int i = 2; i <= n; i++)
-    {
-      if (dp[i - 1] < 0)
-      {
-        dp[i] = nums[i - 1];
-      }
-      else
-      {
-        dp[i] = dp[i - 1] + nums[i - 1];
-      }
-    }
-    for (auto e : dp)
-    {
-      max_sum = max(e, max_sum);
-    }
-
-    return max_sum;
-  }
-
-  /*
-  438. 找到字符串中所有字母异位词
-  输入: s = "cbaebabacd", p = "abc"
-  输出: [0,6]
-  解释:
-  起始索引等于 0 的子串是 "cba", 它是 "abc" 的异位词。
-  起始索引等于 6 的子串是 "bac", 它是 "abc" 的异位词。
-  */
-  vector<int> findAnagrams(string s, string p)
-  {
-    int n = p.size();
-    vector<int> res;
-    if (s.size() < n)
-    {
-      return res;
-    }
-    sort(p.begin(), p.end());
-    int idx = 0;
-    int l = 0;
-    while (l <= s.size() - n)
-    {
-      string tmp = s.substr(l, n);
-      sort(tmp.begin(), tmp.end());
-      if (tmp == p)
-      {
-        res.push_back(l);
-      }
-      l++;
-    }
-    return res;
-  }
-  /*
-    283. 将所有的0移动到数组末尾
-
-  */
-  void moveZeroes(vector<int> &nums)
-  {
-    if (nums.size() < 2)
-    {
-      return;
-    }
-    int idx = 0;
-    int stp = 0;
-    while (idx < nums.size())
-    {
-      if (nums[idx] == 0)
-      {
-        stp++;
-        idx++;
-        continue;
-      }
-      nums[idx - stp] = nums[idx];
-      idx++;
-    }
-    for (int i = 0; i < stp; i++)
-    {
-      nums[nums.size() - 1 - i] = 0;
-    }
-  }
-
   /*
     3. 无重复字符的最长子串
     输入：s = "abcabcbb"
@@ -320,45 +224,47 @@ public:
   }
 
   /*
-  128. 最长连续序列
-  输入：[3, 2, 1, -1, 100]
-  输出：3 即 (1, 2, 3) 为最长连续序列
-  思路：
-    1. 创建一个 unorder_set，将数组元素放进里面方便查找
-    2. 开始遍历 unorder_set，如果 num - 1 存在，就说明这不是开头的数，直接跳过
-    3. 不断循环 num + 1 ，当 num + 1 一直存在的时候，长度++，表示连续序列存在
+  53. 最大子数组和
+  输入：nums = [-2,1,-3,4,-1,2,1,-5,4]
+  输出：6
+  解释：连续子数组 [4,-1,2,1] 的和最大，为 6 。
   */
-  int longestConsecutive(vector<int> &nums)
+  int maxSubArray(vector<int> &nums)
   {
-    if (nums.size() <= 1)
+    int n = nums.size();
+    if (n == 0)
     {
-      return nums.size();
+      return 0;
     }
-    unordered_set<int> ms;
-    for (int i = 0; i < nums.size(); i++)
+    int max_sum = INT_MIN;
+    vector<int> dp(n + 1);
+    dp[0] = INT_MIN;
+    dp[1] = nums[0];
+    for (int i = 2; i <= n; i++)
     {
-      ms.insert(nums[i]);
-    }
-
-    int max_length = -1;
-
-    for (int num : ms)
-    {
-      if (ms.count(num - 1) == 0)
+      if (dp[i - 1] < 0)
       {
-        int curr_num = num;
-        int length = 0;
-        while (ms.count(curr_num) > 0)
-        {
-          curr_num++;
-          length++;
-        }
-        max_length = max(length, max_length);
+        dp[i] = nums[i - 1];
+      }
+      else
+      {
+        dp[i] = dp[i - 1] + nums[i - 1];
       }
     }
-    return max_length;
+    for (auto e : dp)
+    {
+      max_sum = max(e, max_sum);
+    }
+
+    return max_sum;
   }
 
+  /*
+  102. 二叉树的层序遍历
+  输入：root = [3,9,20,null,null,15,7]
+  输出：[[3],[9,20],[15,7]]
+  思路：用两个while循环和两个队列，装不同层的节点
+  */
   vector<vector<int>> levelOrder(TreeNode *root)
   {
     if (root == nullptr)
@@ -408,6 +314,215 @@ public:
         res.push_back(res_tmp);
         res_tmp.clear();
       }
+    }
+    return res;
+  }
+
+  /*
+  128. 最长连续序列
+  输入：[3, 2, 1, -1, 100]
+  输出：3 即 (1, 2, 3) 为最长连续序列
+  思路：
+    1. 创建一个 unorder_set，将数组元素放进里面方便查找
+    2. 开始遍历 unorder_set，如果 num - 1 存在，就说明这不是开头的数，直接跳过
+    3. 不断循环 num + 1 ，当 num + 1 一直存在的时候，长度++，表示连续序列存在
+  */
+  int longestConsecutive(vector<int> &nums)
+  {
+    if (nums.size() <= 1)
+    {
+      return nums.size();
+    }
+    unordered_set<int> ms;
+    for (int i = 0; i < nums.size(); i++)
+    {
+      ms.insert(nums[i]);
+    }
+
+    int max_length = -1;
+
+    for (int num : ms)
+    {
+      if (ms.count(num - 1) == 0)
+      {
+        int curr_num = num;
+        int length = 0;
+        while (ms.count(curr_num) > 0)
+        {
+          curr_num++;
+          length++;
+        }
+        max_length = max(length, max_length);
+      }
+    }
+    return max_length;
+  }
+
+  /*
+  139. 单词拆分
+  输入: s = "leetcode", wordDict = ["leet", "code"]
+  输出: true
+  解释: 返回 true 因为 "leetcode" 可以由 "leet" 和 "code" 拼接成。
+  思路：dp[i] = dp[i-j] && s.substr(i-j, j) for j
+  */
+  bool wordBreak(string s, vector<string> &wordDict)
+  {
+    unordered_set<string> word_set;
+    for (const auto &s : wordDict)
+    {
+      word_set.insert(s);
+    }
+    vector<bool> dp(s.size() + 1);
+    dp[0] = true;
+    for (int i = 1; i <= s.size(); i++)
+    {
+      dp[i] = false;
+      for (int j = 0; j < i; j++)
+      {
+        bool flag = word_set.count(s.substr(j, i - j)) == 1;
+        dp[i] = dp[i] || (dp[j] && flag);
+      }
+    }
+    return dp[s.size()];
+  }
+
+  /*
+  198. 打家劫舍
+  输入：[1,2,3,1]
+  输出：4
+  解释：偷窃 1 号房屋 (金额 = 1) ，然后偷窃 3 号房屋 (金额 = 3)。偷窃到的最高金额 = 1 + 3 = 4 。
+  思路：状态转移方程： dp[i] = max(dp[i - 1], dp[i - 2] + nums[i]);
+  */
+  int rob(vector<int> &nums)
+  {
+    int n = nums.size();
+    vector<int> dp(n);
+    if (n == 1)
+    {
+      return nums[0];
+    }
+    dp[0] = nums[0];
+    dp[1] = max(nums[0], nums[1]);
+    for (int i = 2; i < n; i++)
+    {
+      dp[i] = max(dp[i - 1], dp[i - 2] + nums[i]);
+    }
+    return dp[n - 1];
+  }
+
+  /*
+  279. 完全平方数
+  给你一个整数 n ，返回 和为 n 的完全平方数的最少数量 。
+  思路：dp[i] = min(dp[i-n^2] + 1)
+  */
+  int numSquares(int n)
+  {
+    vector<int> dp(n + 1);
+    dp[0] = 0;
+    dp[1] = 1;
+    for (int i = 2; i <= n; i++)
+    {
+      int tmp = INT_MAX;
+      for (int j = 1; j * j <= i; j++)
+      {
+        tmp = min(dp[i - j * j] + 1, tmp);
+      }
+      dp[i] = tmp;
+    }
+    return dp[n];
+  }
+
+  /*
+  283. 将所有的0移动到数组末尾
+ */
+  void moveZeroes(vector<int> &nums)
+  {
+    if (nums.size() < 2)
+    {
+      return;
+    }
+    int idx = 0;
+    int stp = 0;
+    while (idx < nums.size())
+    {
+      if (nums[idx] == 0)
+      {
+        stp++;
+        idx++;
+        continue;
+      }
+      nums[idx - stp] = nums[idx];
+      idx++;
+    }
+    for (int i = 0; i < stp; i++)
+    {
+      nums[nums.size() - 1 - i] = 0;
+    }
+  }
+
+  /*
+  322. 零钱兑换
+  输入：coins = [1, 2, 5], amount = 11
+  输出：3
+  解释：11 = 5 + 5 + 1
+  思路：dp[i] = min(dp[i-coins[j]] + 1) 遍历所有的 coins
+  */
+  int coinChange(vector<int> &coins, int amount)
+  {
+    vector<int> dp(amount + 1);
+    dp[0] = 0;
+    for (int i = 1; i <= amount; i++)
+    {
+      dp[i] = -1;
+      int tmp = INT_MAX;
+      for (int j = 0; j < coins.size(); j++)
+      {
+        if (i - coins[j] < 0)
+        {
+          continue;
+        }
+        if (dp[i - coins[j]] == -1)
+        {
+          continue;
+        }
+        tmp = min(dp[i - coins[j]] + 1, tmp);
+      }
+      if (tmp < INT_MAX)
+      {
+        dp[i] = tmp;
+      }
+    }
+    return dp[amount];
+  }
+
+  /*
+   438. 找到字符串中所有字母异位词
+   输入: s = "cbaebabacd", p = "abc"
+   输出: [0,6]
+   解释:
+   起始索引等于 0 的子串是 "cba", 它是 "abc" 的异位词。
+   起始索引等于 6 的子串是 "bac", 它是 "abc" 的异位词。
+   */
+  vector<int> findAnagrams(string s, string p)
+  {
+    int n = p.size();
+    vector<int> res;
+    if (s.size() < n)
+    {
+      return res;
+    }
+    sort(p.begin(), p.end());
+    int idx = 0;
+    int l = 0;
+    while (l <= s.size() - n)
+    {
+      string tmp = s.substr(l, n);
+      sort(tmp.begin(), tmp.end());
+      if (tmp == p)
+      {
+        res.push_back(l);
+      }
+      l++;
     }
     return res;
   }
@@ -462,6 +577,9 @@ public:
 int main(void)
 {
   Solution s;
-  vector<int> nums({-1, 0, 1, 2, -1, -4});
-  s.threeSum(nums);
+  // vector<int> nums({-1, 0, 1, 2, -1, -4});
+  // s.threeSum(nums);
+  vector<string> wordDict = vector<string>({"leet", "code"});
+  string str = "leetcode";
+  s.wordBreak(str, wordDict);
 }
