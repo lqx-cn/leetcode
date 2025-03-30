@@ -461,6 +461,30 @@ public:
   }
 
   /*
+  300. 最长递增子序列
+  输入：nums = [10,9,2,5,3,7,101,18]
+  输出：4
+  解释：最长递增子序列是 [2,3,7,101]，因此长度为 4 。
+  思路：dp[i] 表示 以前i个元素结尾的最长递增子序列长度
+  */
+  int lengthOfLIS(vector<int> &nums)
+  {
+    int n = nums.size();
+    vector<int> dp(n + 1);
+    dp[0] = 0;
+    dp[1] = 1;
+    for (int i = 2; i <= n; i++)
+    {
+      dp[i] = INT_MIN;
+      for (int j = 1; j < i; j++)
+      {
+        dp[i] = max(dp[i], nums[j - 1] < nums[i - 1] ? dp[j] + 1 : 1);
+      }
+    }
+    return *max_element(dp.begin(), dp.end());
+  }
+  
+  /*
   322. 零钱兑换
   输入：coins = [1, 2, 5], amount = 11
   输出：3
