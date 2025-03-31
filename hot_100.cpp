@@ -24,6 +24,32 @@ class Solution
 {
 public:
   /*
+  189. 轮转数组
+  input: [1, 2, 3, 4, 5, 6] k = 2
+  output: [5, 6, 1, 2, 3, 4]
+  */
+  void rotate(vector<int> &nums, int k)
+  {
+    int n = nums.size();
+    int real_k = k % n;
+    vector<int> tmp(real_k);
+    for (int i = 0; i < real_k; i++)
+    {
+      tmp[real_k - 1 - i] = nums[n - 1 - i];
+    }
+    for (int i = 0; i < n; i++)
+    {
+      if (n - i - 1 - real_k >= 0)
+      {
+        nums[n - i - 1] = nums[n - i - 1 - real_k];
+      }
+      else
+      {
+        nums[n - i - 1] = tmp[n - i - 1];
+      }
+    }
+  }
+  /*
   238. 除自身以外数组的乘积
   */
   vector<int> productExceptSelf(vector<int> &nums)
@@ -69,7 +95,7 @@ public:
     }
     return res;
   }
-  
+
   /*
     3. 无重复字符的最长子串
     输入：s = "abcabcbb"
