@@ -24,6 +24,53 @@ class Solution
 {
 public:
   /*
+  238. 除自身以外数组的乘积
+  */
+  vector<int> productExceptSelf(vector<int> &nums)
+  {
+    vector<int> res(nums.size());
+    int multiple_res = 1;
+    int zero_cnt = 0;
+    for (int i = 0; i < nums.size(); i++)
+    {
+      if (nums[i] != 0)
+      {
+        multiple_res *= nums[i];
+      }
+      else
+      {
+        zero_cnt++;
+      }
+    }
+    for (int i = 0; i < nums.size(); i++)
+    {
+      if (nums[i] == 0)
+      {
+        if (zero_cnt == 1)
+        {
+          res[i] = multiple_res;
+        }
+        else
+        {
+          res[i] = 0;
+        }
+      }
+      else
+      {
+        if (zero_cnt == 0)
+        {
+          res[i] = multiple_res / nums[i];
+        }
+        else
+        {
+          res[i] = 0;
+        }
+      }
+    }
+    return res;
+  }
+  
+  /*
     3. 无重复字符的最长子串
     输入：s = "abcabcbb"
     输出：3 因为 abc为最长
