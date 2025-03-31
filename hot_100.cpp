@@ -5,6 +5,7 @@
 #include <unordered_set>
 #include <queue>
 #include <limits.h>
+#include <algorithm>
 using namespace std;
 /**
  * Definition for a binary tree node.
@@ -696,6 +697,73 @@ public:
     }
     return res;
   }
+  /*
+  560. 和为 K 的子数组
+  给你一个整数数组 nums 和一个整数 k ，请你统计并返回该数组中和为 k 的子数组的个数 。
+  子数组是数组中元素的!连续!非空序列。
+  input: [1, 2, 3] , k = 3
+  output: 2 [[1, 2], [3]]
+  */
+  // method 2: front nums sum
+  int subarraySum(vector<int> &nums, int k)
+  {
+    int cnt = 0;
+    int sum = 0;
+    unordered_map<int, int> front_sums;
+    for (int i = 0; i < nums.size(); i++)
+    {
+      sum += nums[i];
+      if (sum == k)
+      {
+        cnt++;
+      }
+      auto iter = front_sums.find(sum - k);
+      if (iter != front_sums.end())
+      {
+        cnt += iter->second;
+      }
+
+      iter = front_sums.find(sum);
+      if (iter != front_sums.end())
+      {
+        iter->second++;
+      }
+      else
+      {
+        front_sums[sum] = 1;
+      }
+    }
+    return cnt;
+  }
+  // method 1: track back; overtime
+  //  void getSumTraceBack(vector<int> &nums, int &curr_sum, int first, int k, int &cnt)
+  //  {
+  //    if (curr_sum == k)
+  //    {
+  //      cnt++;
+  //    }
+
+  //   if (first > nums.size() - 1)
+  //   {
+  //     return;
+  //   }
+  //   curr_sum += nums[first];
+  //   getSumTraceBack(nums, curr_sum, first + 1, k, cnt);
+  //   curr_sum -= nums[first];
+  // }
+  // int subarraySum(vector<int> &nums, int k)
+  // {
+  //   int curr_sum = 0;
+  //   int cnt = 0;
+  //   sort(nums.begin(), nums.end());
+  //   for (int s = 0; s < nums.size(); s++)
+  //   {
+  //     curr_sum += nums[s];
+  //     getSumTraceBack(nums, curr_sum, s + 1, k, cnt);
+  //     curr_sum -= nums[s];
+  //   }
+  //   return cnt;
+  // }
 
   void insert(TreeNode *root, int num)
   {
