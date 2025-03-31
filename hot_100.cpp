@@ -542,6 +542,21 @@ public:
   }
 
   /*
+  226. 翻转二叉树
+  */
+  TreeNode *invertTree(TreeNode *root)
+  {
+    if (root == nullptr)
+    {
+      return nullptr;
+    }
+    TreeNode *left = invertTree(root->left);
+    TreeNode *right = invertTree(root->right);
+    root->left = right;
+    root->right = left;
+    return root;
+  }
+  /*
   279. 完全平方数
   给你一个整数 n ，返回 和为 n 的完全平方数的最少数量 。
   思路：dp[i] = min(dp[i-n^2] + 1)
