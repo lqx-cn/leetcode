@@ -318,7 +318,7 @@ public:
   78. 子集
   输入：nums = [1,2,3]
   输出：[[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
-  */ 
+  */
   void subset_trackback(vector<int> &nums, int len, int start, int first, vector<vector<int>> &res)
   {
     if (first == len)
@@ -343,6 +343,32 @@ public:
       subset_trackback(nums, l, 0, 0, res);
     }
     return res;
+  }
+  /*
+  101. 对称二叉树
+  */
+  bool isSame(TreeNode *left, TreeNode *right)
+  {
+    if (left == nullptr && right == nullptr)
+    {
+      return true;
+    }
+    else if (left == nullptr || right == nullptr)
+    {
+      return false;
+    }
+    if (left->val == right->val)
+    {
+      return isSame(left->right, right->left) && isSame(left->left, right->right);
+    }
+    else
+    {
+      return false;
+    }
+  }
+  bool isSymmetric(TreeNode *root)
+  {
+    return isSame(root->left, root->right);
   }
   /*
   102. 二叉树的层序遍历
@@ -539,7 +565,7 @@ public:
 
   /*
   283. 将所有的0移动到数组末尾
- */
+  */
   void moveZeroes(vector<int> &nums)
   {
     if (nums.size() < 2)
