@@ -138,78 +138,57 @@ public:
 
   /*
   15. 三数之和为0
+  注意：本题最终要的是避免枚举重复元素
   思路：
-    1. 考虑到数组中有3个以上的0时，{0, 0, 0} 也是一个解，先装进res中
-    2. 先从小到大排序，并找到第一个大于0的数，如果没有找到，直接返回res
-    3. 设置左右指针l, r； l从左到mid，r从右到mid，进行遍历
-    4. 根据 nums[l] 和 nums[r] 的绝对值大小，选择找第三个数，范围在 l+1 到 mid 或 mid 到 r-1 中
+    1. 异常输入返回（小于三个元素的输入直接返回）
+    2. 对数组进行排序，然后开始枚举第一个元素，注意不能重复
+    3. 使用双指针
   */
   vector<vector<int>> threeSum(vector<int> &nums)
   {
     vector<vector<int>> res;
-    sort(nums.begin(), nums.end());
-    auto iter = find_if(nums.begin(), nums.end(), [](int num)
-                        { return num > 0; });
-    int count_0 = 0;
-    for (auto n : nums)
-    {
-      if (n == 0)
-      {
-        count_0++;
-      }
-    }
-    if (count_0 > 2)
-    {
-      res.push_back(vector<int>({0, 0, 0}));
-    }
-
-    int mid = distance(nums.begin(), iter);
-    if (mid == 0 || mid == nums.size())
+    int n = nums.size();
+    if (n < 3)
     {
       return res;
     }
-
-    for (int l = 0; l < mid; l++)
+    sort(nums.begin(), nums.end());
+    for (int i = 0; i < n; i++)
     {
-      if (l > 0 && nums[l] == nums[l - 1])
+      if (nums[i] > 0)
+      {
+        break;
+      }
+      if (i > 0 && nums[i] == nums[i - 1])
       {
         continue;
       }
-      for (int r = nums.size() - 1; r >= mid; r--)
+      int l = i + 1, r = n - 1;
+      while (l < r)
       {
-        if (r < nums.size() - 1 && nums[r] == nums[r + 1])
+        if (l > i + 1 && nums[l] == nums[l - 1])
         {
+          l++;
           continue;
         }
-        if (abs(nums[l]) > abs(nums[r]))
+        if (r < n - 1 && nums[r] == nums[r + 1])
         {
-          for (int i = mid; i < r; i++)
-          {
-            if (nums[i] == -(nums[r] + nums[l]))
-            {
-              res.push_back(vector<int>({nums[l], nums[r], nums[i]}));
-              break;
-            }
-            else if (nums[i] > -(nums[r] + nums[l]))
-            {
-              break;
-            }
-          }
+          r--;
+          continue;
+        }
+        if (nums[l] + nums[r] == -nums[i])
+        {
+          res.push_back({nums[i], nums[l], nums[r]});
+          l++;
+          r--;
+        }
+        else if (nums[l] + nums[r] < -nums[i])
+        {
+          l++;
         }
         else
         {
-          for (int i = l + 1; i <= mid; i++)
-          {
-            if (nums[i] == -(nums[r] + nums[l]))
-            {
-              res.push_back(vector<int>({nums[l], nums[r], nums[i]}));
-              break;
-            }
-            else if (nums[i] > -(nums[r] + nums[l]))
-            {
-              break;
-            }
-          }
+          r--;
         }
       }
     }
