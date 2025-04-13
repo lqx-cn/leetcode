@@ -785,27 +785,35 @@ public:
    */
   vector<int> findAnagrams(string s, string p)
   {
-    int n = p.size();
     vector<int> res;
-    if (s.size() < n)
+    if (s.size() < p.size())
     {
       return res;
     }
-    sort(p.begin(), p.end());
-    int idx = 0;
-    int l = 0;
-    while (l <= s.size() - n)
+    vector<int> count_s(26, 0);
+    vector<int> count_p(26, 0);
+    for (int i = 0; i < p.size(); i++)
     {
-      string tmp = s.substr(l, n);
-      sort(tmp.begin(), tmp.end());
-      if (tmp == p)
+      count_p[p[i] - 'a']++;
+    }
+
+    for (int i = 0; i < s.size(); i++)
+    {
+      count_s[s[i] - 'a']++;
+      int l = i - p.size() + 1;
+      if (l < 0)
+      {
+        continue;
+      }
+      else if (count_s == count_p)
       {
         res.push_back(l);
       }
-      l++;
+      count_s[s[l] - 'a']--;
     }
     return res;
   }
+
   /*
   560. 和为 K 的子数组
   给你一个整数数组 nums 和一个整数 k ，请你统计并返回该数组中和为 k 的子数组的个数 。
