@@ -137,6 +137,63 @@ public:
   }
 
   /*
+  42. 接雨水
+  */
+  int trap(vector<int> &height)
+  {
+    int n = height.size();
+    if (n < 3)
+    {
+      return 0;
+    }
+    vector<int> left_heigher_idx(n, -1);
+    vector<int> right_heigher_idx(n, -1);
+    deque<int> st;
+    for (int i = 0; i < n; i++)
+    {
+      while (!st.empty() && height[i] >= height[st.back()])
+      {
+        st.pop_back();
+      }
+
+      if (!st.empty())
+      {
+        left_heigher_idx[i] = st.back();
+      }
+      else
+      {
+        st.push_back(i);
+      }
+    }
+    st.clear();
+    for (int i = n - 1; i > -1; i--)
+    {
+      while (!st.empty() && height[i] >= height[st.back()])
+      {
+        st.pop_back();
+      }
+      if (!st.empty())
+      {
+        right_heigher_idx[i] = st.back();
+      }
+      else
+      {
+        st.push_back(i);
+      }
+    }
+    deque<int>(0).swap(st);
+    int capacity = 0;
+    for (int i = 0; i < n; i++)
+    {
+      if (left_heigher_idx[i] != -1 && right_heigher_idx[i] != -1)
+      {
+        capacity += (min(height[left_heigher_idx[i]], height[right_heigher_idx[i]]) - height[i]);
+      }
+    }
+    return capacity;
+  }
+
+  /*
   15. 三数之和为0
   注意：本题最终要的是避免枚举重复元素
   思路：
