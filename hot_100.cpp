@@ -117,7 +117,7 @@ public:
     int length = 1;
     unordered_set<char> set;
     set.insert(s[0]);
-    while (l < r && r < s.size())
+    while (r < s.size())
     {
       if (set.count(s[r]) == 0)
       {
